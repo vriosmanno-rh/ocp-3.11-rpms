@@ -16,17 +16,6 @@
       -p {{ temp_sync_path }}/rpms \
       --downloadcomps \
       --download-metadata
-    while [ "$?" != "0" ]; do 
-      sleep 30
-      reposync -l \
-        -r {{ item.repoid }} \
-        -p {{ temp_sync_path }}/rpms \
-        --downloadcomps \
-        --download-metadata
-      if [ "$?" = "0" ]; then 
-        exit 0
-      fi
-    done
   with_items: "{{ installed_repos.results }}"
   when:
     - "item.repoid in rhsm_repos"

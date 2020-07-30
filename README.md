@@ -9,6 +9,7 @@ Requirements
 - Ansible >= 2.5
 - RHEL == 7
 - Active RHEL OpenShift 3.11 Subscription
+- Recommended to have a system with 150 GB of space
 
 Role Variables
 --------------
@@ -19,7 +20,7 @@ Role Variables
 | **rhsm_password** | string | yes | *undefined* | The account password with access to subscriptions on https://access.redhat.com |
 | **rhsm_pool** | string | no | *undefined* | The subscription pool IDs to consume that contain OCP 3.11. (ex. `0123456789abcdef0123456789abcdef`) |
 | **rhsm_unregister** | boolean | no | false | Unregister the system from RHSM when completed |
-| **temp_sync_path** | string | yes | */tmp* | The temp path for the reposync files |
+| **temp_sync_path** | string | yes | `/tmp` | The temp path for the reposync files |
 
 Role Tags
 ---------
