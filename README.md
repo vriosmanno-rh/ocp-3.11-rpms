@@ -28,8 +28,8 @@ Role Tags
 | --- | --- |
 | **cleanup** | Tag to run as last step to cleanup synced data stored in the `{{ temp_sync_path }}/rpms` |
 
-Example Playbook
-----------------
+Examples
+--------
 
 ### Running with defaults
 ```yaml
