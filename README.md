@@ -1,7 +1,7 @@
 ocp-3.11-rpms
 =========
 
-Role to copy all required OCP 3.11 RPM repos from Red Hat to local disk for disconnected installation.
+An Ansible role to copy all required OCP 3.11 RPM repos from Red Hat to local disk for disconnected installation.
 
 Requirements
 ------------
