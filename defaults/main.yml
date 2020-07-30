@@ -1,0 +1,12 @@
+---
+# defaults file for ocp-3.11-rpms
+content_sync_path: /data
+temp_sync_path: /tmp
+
+rhsm_repos:
+  - rhel-7-server-rpms
+  - rhel-7-server-extras-rpms
+  - rhel-7-server-ose-3.11-rpms
+  - rhel-7-server-ansible-2.9-rpms
+
+rhsm_unregister: false

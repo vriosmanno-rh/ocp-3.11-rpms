@@ -1,0 +1,49 @@
+---
+# tasks file for ocp-3.11-rpms rhel systems
+- name: Get remote RHSM repositories
+  become: true
+  yum:
+    list: repos
+    state: present
+    update_cache: true
+  register: installed_repos
+
+- name: Sync repositories locally
+  become: true
+  shell: >
+    reposync -l \
+      -r {{ item.repoid }} \
+      -p {{ temp_sync_path }}/rpms \
+      --downloadcomps \
+      --download-metadata
+    while [ "$?" != "0" ]; do 
+      sleep 30
+      reposync -l \
+        -r {{ item.repoid }} \
+        -p {{ temp_sync_path }}/rpms \
+        --downloadcomps \
+        --download-metadata
+      if [ "$?" = "0" ]; then 
+        exit 0
+      fi
+    done
+  with_items: "{{ installed_repos.results }}"
+  when:
+    - "item.repoid in rhsm_repos"
+
+- name: Create repositories locally
+  become: true
+  shell: >
+    createrepo -v {{ temp_sync_path }}/rpms/{{ item.repoid }}
+  with_items: "{{ installed_repos.results }}"
+  when:
+    - "item.repoid in rhsm_repos"
+  
+- name: Unregister subcriptions
+  become: true
+  redhat_subscription:
+    pool_ids: "{{ rhsm_pools }}"
+    state: absent
+    server_insecure: true
+  when:
+    - rhsm_unregister == true

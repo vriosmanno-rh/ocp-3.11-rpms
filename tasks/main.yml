@@ -1,0 +1,58 @@
+---
+# tasks file for ocp-3.11-rpms
+- name: Pre-check variables are set
+  fail:
+    msg: >
+      Credentials were not set in inventory variables for rhsm_user and rhsm_password.
+      Set those variables before running this role.
+      See README for ocp-3.11-rpms role more information.
+  when:
+    - rhsm_user is not defined
+    - rhsm_password is not defined
+
+- name: Create RPMs directory
+  file:
+    mode: '0755'
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ content_sync_path }}/OCP/rpms"
+    - "{{ temp_sync_path }}/rpms"
+
+- name: RHSM subscribe
+  include_tasks: rhel-subscribe.yml
+  when:
+    - ansible_distribution == 'RedHat'
+
+- name: Install yum-utils, createrepo and genisoimage
+  yum:
+    name:
+      - yum-utils
+      - createrepo
+      - genisoimage
+    state: present
+
+- name: RHSM repo-sync
+  include_tasks: rhel.yml
+
+- name: Find RPM directories
+  find:
+    file_type: directory
+    path: "{{ temp_sync_path }}/rpms"
+    recurse: false
+  register: rpms_directories
+
+- name: Make ISO's out of RPM directores
+  shell: >
+    mkisofs -o {{ content_sync_path }}/OCP/rpms/{{ item.path.split('/')[-1] }}.iso \
+      "{{ item.path }}"
+  with_items: "{{ rpms_directories.files }}"
+
+- name: Cleanup temp destination
+  become: true
+  file:
+    path: "{{ temp_sync_path }}/rpms"
+    state: absent
+  tags:
+    - never
+    - cleanup
