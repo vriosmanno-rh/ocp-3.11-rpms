@@ -2,7 +2,7 @@ galaxy_info:
   author: Red Hat Consulting
   description: Role to copy all required OCP 3.11 RPM repos from Red Hat to local disk for disconnected installation.
   company: Red Hat, Inc.
-  # issue_tracker_url: http://example.com/issue/tracker
+  issue_tracker_url: https://github.com/vriosmanno-rh/ocp-3.11-rpms/issues
   license: license (GPL-2.0-or-later)
   min_ansible_version: 2.5
   platforms:
